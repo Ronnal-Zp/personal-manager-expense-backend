@@ -6,6 +6,7 @@ import com.aldahirzamora.personal_manager_expense_backend.auth.dto.RegisterReque
 import com.aldahirzamora.personal_manager_expense_backend.auth.entity.Role;
 import com.aldahirzamora.personal_manager_expense_backend.auth.entity.User;
 import com.aldahirzamora.personal_manager_expense_backend.auth.exception.UserAlreadyExistsException;
+import com.aldahirzamora.personal_manager_expense_backend.auth.repository.RoleRepository;
 import com.aldahirzamora.personal_manager_expense_backend.auth.repository.UserRepository;
 import com.aldahirzamora.personal_manager_expense_backend.auth.security.JwtService;
 import lombok.RequiredArgsConstructor;
@@ -14,11 +15,14 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
 
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
@@ -43,11 +47,14 @@ public class AuthService {
             throw new UserAlreadyExistsException("El email ya esta en uso");
         }
 
+        Role defaultRole = roleRepository.findByName("USER")
+                .orElseThrow(() -> new IllegalStateException("Rol por defecto 'USER' no encontrado"));
+
         User user = User.builder()
                 .username(request.username())
                 .email(request.email())
                 .password(passwordEncoder.encode(request.password()))
-                .role(Role.USER)
+                .roles(Set.of(defaultRole))
                 .build();
 
         userRepository.save(user);
