@@ -41,6 +41,12 @@ public class GlobalExceptionHandler {
         return badRequest("El parametro '" + ex.getName() + "' tiene un valor invalido: " + ex.getValue());
     }
 
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleResourceNotFound(ResourceNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ErrorResponse(HttpStatus.NOT_FOUND.value(), "Recurso no encontrado", ex.getMessage()));
+    }
+
     private static String formatFieldError(FieldError error) {
         return error.getField() + ": " + error.getDefaultMessage();
     }
