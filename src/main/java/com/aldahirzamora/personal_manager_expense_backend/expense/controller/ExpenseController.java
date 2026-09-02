@@ -1,8 +1,10 @@
 package com.aldahirzamora.personal_manager_expense_backend.expense.controller;
 
 import com.aldahirzamora.personal_manager_expense_backend.core.dto.ListResponse;
+import com.aldahirzamora.personal_manager_expense_backend.core.dto.PageQuery;
 import com.aldahirzamora.personal_manager_expense_backend.expense.dto.response.ExpenseItem;
 import com.aldahirzamora.personal_manager_expense_backend.expense.service.ExpenseService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,8 +19,8 @@ public class ExpenseController {
     private final ExpenseService expenseService;
 
     @GetMapping
-    public ResponseEntity<ListResponse<ExpenseItem>> list() {
-        return ResponseEntity.ok(expenseService.list());
+    public ResponseEntity<ListResponse<ExpenseItem>> list(@Valid PageQuery query) {
+        return ResponseEntity.ok(expenseService.list(query));
     }
 
 }
