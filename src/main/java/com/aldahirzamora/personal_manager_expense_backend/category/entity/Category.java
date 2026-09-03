@@ -29,4 +29,7 @@ public class Category {
 
     @Column()
     private String color;
+
+    @Column(nullable = false)
+    private Long user_owner;
 }

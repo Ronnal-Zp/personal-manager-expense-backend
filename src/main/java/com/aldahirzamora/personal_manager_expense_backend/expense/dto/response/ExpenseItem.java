@@ -1,11 +1,13 @@
 package com.aldahirzamora.personal_manager_expense_backend.expense.dto.response;
 
 import com.aldahirzamora.personal_manager_expense_backend.category.entity.Category;
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.Date;
 
 @Data
+@Builder
 public class ExpenseItem {
     private Long id;
     private String title;

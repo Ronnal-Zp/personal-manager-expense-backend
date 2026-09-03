@@ -12,16 +12,16 @@ public class ExpenseMapper {
     }
 
     public static ExpenseItem toItem(Expense expense) {
-        ExpenseItem item = new ExpenseItem();
-        item.setId(expense.getId());
-        item.setTitle(expense.getTitle());
-        item.setDescription(expense.getDescription());
-        item.setDate(expense.getDate());
-        item.setAmount(expense.getAmount());
-        item.setSum_rest_sign(expense.getSum_rest_sign());
-        item.setCategory(expense.getCategory());
-        item.setUser_owner(expense.getUser_owner());
-        return item;
+        return ExpenseItem.builder()
+                .id(expense.getId())
+                .title(expense.getTitle())
+                .description(expense.getDescription())
+                .date(expense.getDate())
+                .amount(expense.getAmount())
+                .sum_rest_sign(expense.getSum_rest_sign())
+                .category(expense.getCategory())
+                .user_owner(expense.getUser_owner())
+                .build();
     }
 
     public static Expense toEntity(CreateExpenseRequest request, Category category, Long userOwner) {
