@@ -40,6 +40,22 @@ public class ExpenseService {
         return new ListResponse<>(items, MetaListResponse.from(expenses));
     }
 
+    public ListResponse<ExpenseItem> listByCategory(Long categoryId, PageQuery query, Long userOwner) {
+        categoryRepository.findByIdAndUserOwner(categoryId, userOwner)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Categoria no encontrada: " + categoryId));
+
+        Page<Expense> expenses = expenseRepository
+                .findAllByCategoryIdAndUserOwner(categoryId, userOwner,
+                        query.toPageable(SORTABLE_FIELDS, DEFAULT_SORT_FIELD));
+
+        List<ExpenseItem> items = expenses.getContent().stream()
+                .map(ExpenseMapper::toItem)
+                .toList();
+
+        return new ListResponse<>(items, MetaListResponse.from(expenses));
+    }
+
 
     @Transactional
     public ExpenseItem create(CreateExpenseRequest request, Long userOwner) {

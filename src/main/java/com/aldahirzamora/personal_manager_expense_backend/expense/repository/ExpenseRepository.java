@@ -7,12 +7,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
-
 public interface ExpenseRepository extends JpaRepository<Expense, Long> {
-
-    List<Expense> findByCategory_Id(Long category_id);
 
     @Query("select e from Expense e where e.user_owner = :userOwner")
     Page<Expense> findAllByUserOwner(@Param("userOwner") Long userOwner, Pageable pageable);
+
+    @Query("select e from Expense e where e.category.id = :categoryId and e.user_owner = :userOwner")
+    Page<Expense> findAllByCategoryIdAndUserOwner(@Param("categoryId") Long categoryId,
+                                                  @Param("userOwner") Long userOwner,
+                                                  Pageable pageable);
 }
