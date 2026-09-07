@@ -6,6 +6,9 @@ import com.aldahirzamora.personal_manager_expense_backend.category.dto.response.
 import com.aldahirzamora.personal_manager_expense_backend.category.service.CategoryService;
 import com.aldahirzamora.personal_manager_expense_backend.core.dto.ListResponse;
 import com.aldahirzamora.personal_manager_expense_backend.core.dto.PageQuery;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,11 +23,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/${api.version}/category")
 @RequiredArgsConstructor
+@Tag(name = "Categorias", description = "Gestion de categorias de gastos del usuario autenticado")
+@SecurityRequirement(name = "bearerAuth")
 public class CategoryController {
 
     private final CategoryService categoryService;
 
     @GetMapping
+    @Operation(summary = "Listar categorias", description = "Lista paginada de las categorias del usuario autenticado")
     public ResponseEntity<ListResponse<CategoryItem>> list(
             @Valid PageQuery query,
             @AuthenticationPrincipal User user
@@ -33,6 +39,7 @@ public class CategoryController {
     }
 
     @PostMapping
+    @Operation(summary = "Crear categoria", description = "Crea una nueva categoria para el usuario autenticado")
     public ResponseEntity<CategoryItem> create(
             @Valid @RequestBody CreateCategoryRequest request,
             @AuthenticationPrincipal User user
