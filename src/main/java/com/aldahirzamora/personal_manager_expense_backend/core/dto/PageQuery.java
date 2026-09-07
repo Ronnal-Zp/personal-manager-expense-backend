@@ -12,7 +12,7 @@ import java.util.Set;
 @Data
 public class PageQuery {
 
-    public static final int MAX_LIMIT = 100;
+    public static final int MAX_LIMIT = 255;
 
     @Min(1)
     private int page = 1;
