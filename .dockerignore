@@ -1,0 +1,10 @@
+target/
+.git/
+.idea/
+.vscode/
+.metadata/
+jdt.ls-java-project/
+*.iml
+HELP.md
+docker-compose.yml
+.env
