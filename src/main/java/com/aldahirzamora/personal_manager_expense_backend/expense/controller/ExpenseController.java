@@ -50,6 +50,14 @@ public class ExpenseController {
         return ResponseEntity.ok(expenseService.listByCategory(categoryId, query, user.getId()));
     }
 
+    @GetMapping("/totalByCategory")
+    @Operation(summary = "Obtener total de gastos por categoria", description = "Obtener total de gastos por categoria")
+    public ResponseEntity<Object> listByCategory(
+            @AuthenticationPrincipal User user
+    ) {
+        return ResponseEntity.ok(expenseService.getTotalByCategory(user.getId()));
+    }
+
     @PostMapping
     @Operation(summary = "Crear gasto", description = "Crea un nuevo gasto para el usuario autenticado")
     public ResponseEntity<ExpenseItem> create(

@@ -9,6 +9,7 @@ import com.aldahirzamora.personal_manager_expense_backend.category.repository.Ca
 import com.aldahirzamora.personal_manager_expense_backend.expense.dto.request.CreateExpenseRequest;
 import com.aldahirzamora.personal_manager_expense_backend.expense.dto.response.ExpenseItem;
 import com.aldahirzamora.personal_manager_expense_backend.expense.dto.response.ExpenseMapper;
+import com.aldahirzamora.personal_manager_expense_backend.expense.dto.response.TotalExpenseByCategory;
 import com.aldahirzamora.personal_manager_expense_backend.expense.entity.Expense;
 import com.aldahirzamora.personal_manager_expense_backend.expense.repository.ExpenseRepository;
 import lombok.RequiredArgsConstructor;
@@ -54,6 +55,19 @@ public class ExpenseService {
                 .toList();
 
         return new ListResponse<>(items, MetaListResponse.from(expenses));
+    }
+
+    public ListResponse<TotalExpenseByCategory> getTotalByCategory(Long userOwner) {
+        List<TotalExpenseByCategory> expenseList = expenseRepository.getTotalByCategory(userOwner);
+
+        MetaListResponse meta = MetaListResponse.builder()
+                .page(1)
+                .limit(expenseList.size())
+                .totalItems(expenseList.size())
+                .totalPages(1)
+                .build();
+
+        return new ListResponse<>(expenseList, meta);
     }
 
 
