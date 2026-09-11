@@ -1,6 +1,7 @@
 package com.aldahirzamora.personal_manager_expense_backend.category.service;
 
 import com.aldahirzamora.personal_manager_expense_backend.category.dto.request.CreateCategoryRequest;
+import com.aldahirzamora.personal_manager_expense_backend.category.dto.request.UpdateCategoryRequest;
 import com.aldahirzamora.personal_manager_expense_backend.category.dto.response.CategoryItem;
 import com.aldahirzamora.personal_manager_expense_backend.category.dto.response.CategoryMapper;
 import com.aldahirzamora.personal_manager_expense_backend.category.entity.Category;
@@ -53,4 +54,28 @@ public class CategoryService {
         categoryRepository.delete(category);
     }
 
+    @Transactional
+    public CategoryItem update(Long idCategory, UpdateCategoryRequest request, Long userOwner) {
+        Category category = categoryRepository.findByIdAndUserOwner(idCategory, userOwner).orElseThrow(
+                () -> new ResourceNotFoundException("Categoria no encontrada: " + idCategory)
+        );
+        if (request.getName() != null) {
+            category.setName(request.getName());
+        }
+        if (request.getBudget_Limit() != null) {
+            category.setBudget_Limit(request.getBudget_Limit());
+        }
+        if (request.getIcon() != null) {
+            category.setIcon(request.getIcon());
+        }
+        if (request.getText_color() != null) {
+            category.setText_color(request.getText_color());
+        }
+        if (request.getColor() != null) {
+            category.setColor(request.getColor());
+        }
+
+        Category categoryUpdated = categoryRepository.save(category);
+        return CategoryMapper.toItem(categoryUpdated);
+    }
 }

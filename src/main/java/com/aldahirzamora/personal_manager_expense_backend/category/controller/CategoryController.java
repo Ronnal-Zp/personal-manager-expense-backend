@@ -2,6 +2,7 @@ package com.aldahirzamora.personal_manager_expense_backend.category.controller;
 
 import com.aldahirzamora.personal_manager_expense_backend.auth.entity.User;
 import com.aldahirzamora.personal_manager_expense_backend.category.dto.request.CreateCategoryRequest;
+import com.aldahirzamora.personal_manager_expense_backend.category.dto.request.UpdateCategoryRequest;
 import com.aldahirzamora.personal_manager_expense_backend.category.dto.response.CategoryItem;
 import com.aldahirzamora.personal_manager_expense_backend.category.service.CategoryService;
 import com.aldahirzamora.personal_manager_expense_backend.core.dto.ListResponse;
@@ -42,6 +43,16 @@ public class CategoryController {
             @AuthenticationPrincipal User user
     ) {
         return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.create(request, user.getId()));
+    }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "Actualizar categoria", description = "Actualiza una categoria")
+    public ResponseEntity<CategoryItem> update(
+            @Parameter(description = "Id de la categoria") @PathVariable Long id,
+            @Valid @RequestBody UpdateCategoryRequest request,
+            @AuthenticationPrincipal User user
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(categoryService.update(id,request,user.getId()));
     }
 
     @DeleteMapping("/{id}")
