@@ -7,6 +7,7 @@ import com.aldahirzamora.personal_manager_expense_backend.category.service.Categ
 import com.aldahirzamora.personal_manager_expense_backend.core.dto.ListResponse;
 import com.aldahirzamora.personal_manager_expense_backend.core.dto.PageQuery;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -14,11 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/${api.version}/category")
@@ -45,6 +42,16 @@ public class CategoryController {
             @AuthenticationPrincipal User user
     ) {
         return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.create(request, user.getId()));
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Eliminar categoria", description = "Elimina fisicamente una categoria")
+    public ResponseEntity<Void> delete(
+            @Parameter(description = "Id de la categoria") @PathVariable Long id,
+            @AuthenticationPrincipal User user
+    ) {
+        categoryService.delete(id, user.getId());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }

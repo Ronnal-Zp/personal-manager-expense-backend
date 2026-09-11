@@ -8,6 +8,7 @@ import com.aldahirzamora.personal_manager_expense_backend.category.repository.Ca
 import com.aldahirzamora.personal_manager_expense_backend.core.dto.ListResponse;
 import com.aldahirzamora.personal_manager_expense_backend.core.dto.MetaListResponse;
 import com.aldahirzamora.personal_manager_expense_backend.core.dto.PageQuery;
+import com.aldahirzamora.personal_manager_expense_backend.core.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -41,6 +42,15 @@ public class CategoryService {
         Category category = categoryRepository.save(CategoryMapper.toEntity(request, userOwner));
 
         return CategoryMapper.toItem(category);
+    }
+
+    @Transactional
+    public void delete(Long idCategory, Long userOwner) {
+        Category category = categoryRepository.findByIdAndUserOwner(idCategory, userOwner).orElseThrow(
+                () -> new ResourceNotFoundException("Categoria no encontrada: " + idCategory)
+        );
+
+        categoryRepository.delete(category);
     }
 
 }
