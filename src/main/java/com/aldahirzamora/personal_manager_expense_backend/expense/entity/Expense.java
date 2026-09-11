@@ -40,4 +40,7 @@ public class Expense {
 
     @Column(nullable = false)
     private Long user_owner;
+
+    @Column()
+    private Date deleted_at;
 }

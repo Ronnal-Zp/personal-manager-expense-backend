@@ -7,6 +7,7 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -34,6 +35,11 @@ public class GlobalExceptionHandler {
                 .map(GlobalExceptionHandler::formatViolation)
                 .collect(Collectors.joining("; "));
         return badRequest(detail.isEmpty() ? "Parametros invalidos" : detail);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleNotReadable(HttpMessageNotReadableException ex) {
+        return badRequest("El cuerpo de la solicitud contiene datos invalidos");
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)

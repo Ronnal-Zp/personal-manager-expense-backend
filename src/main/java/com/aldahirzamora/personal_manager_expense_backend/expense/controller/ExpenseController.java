@@ -4,6 +4,7 @@ import com.aldahirzamora.personal_manager_expense_backend.core.dto.ListResponse;
 import com.aldahirzamora.personal_manager_expense_backend.core.dto.PageQuery;
 import com.aldahirzamora.personal_manager_expense_backend.auth.entity.User;
 import com.aldahirzamora.personal_manager_expense_backend.expense.dto.request.CreateExpenseRequest;
+import com.aldahirzamora.personal_manager_expense_backend.expense.dto.request.UpdateExpenseRequest;
 import com.aldahirzamora.personal_manager_expense_backend.expense.dto.response.ExpenseItem;
 import com.aldahirzamora.personal_manager_expense_backend.expense.service.ExpenseService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,12 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/${api.version}/expense")
@@ -65,6 +61,35 @@ public class ExpenseController {
             @AuthenticationPrincipal User user
     ) {
         return ResponseEntity.status(HttpStatus.CREATED).body(expenseService.create(request, user.getId()));
+    }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "Actualizar gasto", description = "Actualiza gasto")
+    public ResponseEntity<ExpenseItem> update(
+            @Parameter(description = "Id del gasto") @PathVariable Long id,
+            @Valid @RequestBody UpdateExpenseRequest request,
+            @AuthenticationPrincipal User user
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(expenseService.update(id,request,user.getId()));
+    }
+
+    @DeleteMapping("/all")
+    @Operation(summary = "Eliminar todos los gastos", description = "Eliminar todos los gastos del usuario")
+    public ResponseEntity<Void> delete(
+            @AuthenticationPrincipal User user
+    ) {
+        expenseService.deleteAll(user.getId());
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Eliminar gasto", description = "Eliminar gasto")
+    public ResponseEntity<Void> delete(
+            @Parameter(description = "Id del gasto") @PathVariable Long id,
+            @AuthenticationPrincipal User user
+    ) {
+        expenseService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

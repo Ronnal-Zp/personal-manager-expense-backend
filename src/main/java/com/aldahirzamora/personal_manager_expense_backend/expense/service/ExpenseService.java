@@ -7,6 +7,7 @@ import com.aldahirzamora.personal_manager_expense_backend.core.exception.Resourc
 import com.aldahirzamora.personal_manager_expense_backend.category.entity.Category;
 import com.aldahirzamora.personal_manager_expense_backend.category.repository.CategoryRepository;
 import com.aldahirzamora.personal_manager_expense_backend.expense.dto.request.CreateExpenseRequest;
+import com.aldahirzamora.personal_manager_expense_backend.expense.dto.request.UpdateExpenseRequest;
 import com.aldahirzamora.personal_manager_expense_backend.expense.dto.response.ExpenseItem;
 import com.aldahirzamora.personal_manager_expense_backend.expense.dto.response.ExpenseMapper;
 import com.aldahirzamora.personal_manager_expense_backend.expense.dto.response.TotalExpenseByCategory;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -82,4 +84,47 @@ public class ExpenseService {
         return ExpenseMapper.toItem(expense);
     }
 
+    @Transactional
+    public ExpenseItem update(Long id, UpdateExpenseRequest request, Long userOwner) {
+        Expense expense = expenseRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Gasto no encontrado: " + id)
+        );
+
+        Category category = categoryRepository.findByIdAndUserOwner(expense.getCategory().getId(), userOwner).orElseThrow(
+                () -> new ResourceNotFoundException("Gasto no dispone de categoria: " + expense.getCategory().getId())
+        );
+
+        if(request.getTitle() != null) {
+            expense.setTitle(request.getTitle());
+        }
+        if(request.getDescription() != null) {
+            expense.setDescription(request.getDescription());
+        }
+        if(request.getDate() != null) {
+            expense.setDate(request.getDate());
+        }
+        if(request.getAmount() != null) {
+            expense.setAmount(request.getAmount());
+        }
+        if(request.getCategory_id() != null) {
+            expense.setCategory(category);
+        }
+
+        expenseRepository.save(expense);
+        return ExpenseMapper.toItem(expense);
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        Expense expense = expenseRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Gasto no encontrado: " + id)
+        );
+        expense.setDeleted_at(new Date());
+        expenseRepository.save(expense);
+    }
+
+    @Transactional
+    public void deleteAll(Long userOwner) {
+        expenseRepository.deleteAllByUserOwner(userOwner);
+    }
 }

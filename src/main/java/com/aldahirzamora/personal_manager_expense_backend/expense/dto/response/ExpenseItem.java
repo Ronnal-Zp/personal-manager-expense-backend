@@ -17,4 +17,5 @@ public class ExpenseItem {
     private String sum_rest_sign;
     private Category category;
     private Long user_owner;
+    private Date deleted_at;
 }

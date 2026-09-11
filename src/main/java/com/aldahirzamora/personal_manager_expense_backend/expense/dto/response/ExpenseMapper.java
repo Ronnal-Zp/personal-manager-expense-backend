@@ -21,6 +21,7 @@ public class ExpenseMapper {
                 .sum_rest_sign(expense.getSum_rest_sign())
                 .category(expense.getCategory())
                 .user_owner(expense.getUser_owner())
+                .description(expense.getDescription())
                 .build();
     }
 
@@ -33,6 +34,7 @@ public class ExpenseMapper {
                 .sum_rest_sign(request.getSum_rest_sign())
                 .category(category)
                 .user_owner(userOwner)
+                .deleted_at(request.getDeleted_at())
                 .build();
     }
 }
