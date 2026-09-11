@@ -38,6 +38,13 @@ public class CategoryService {
         return new ListResponse<>(items, MetaListResponse.from(categories));
     }
 
+    public CategoryItem getById(Long id) {
+        Category category = categoryRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Categoria no encontrada: " + id)
+        );
+        return CategoryMapper.toItem(category);
+    }
+
     @Transactional
     public CategoryItem create(CreateCategoryRequest request, Long userOwner) {
         Category category = categoryRepository.save(CategoryMapper.toEntity(request, userOwner));

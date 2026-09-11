@@ -36,6 +36,14 @@ public class CategoryController {
         return ResponseEntity.ok(categoryService.list(query, user.getId()));
     }
 
+    @GetMapping("/{id}")
+    @Operation(summary = "Obtener por id", description = "Obtener categoria por id")
+    public ResponseEntity<CategoryItem> getById(
+            @Parameter(description = "Id de la categoria") @PathVariable Long id
+    ) {
+        return ResponseEntity.ok(categoryService.getById(id));
+    }
+
     @PostMapping
     @Operation(summary = "Crear categoria", description = "Crea una nueva categoria para el usuario autenticado")
     public ResponseEntity<CategoryItem> create(
