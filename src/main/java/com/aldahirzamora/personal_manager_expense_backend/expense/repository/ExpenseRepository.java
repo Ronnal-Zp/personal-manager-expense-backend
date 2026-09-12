@@ -35,6 +35,6 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
     List<TotalExpenseByCategory> getTotalByCategory(@Param("userOwner") Long userOwner);
 
     @Modifying
-    @Query("delete from Expense e where e.user_owner = :userOwner")
+    @Query("update Expense e set e.deleted_at = CURRENT_TIMESTAMP where e.user_owner = :userOwner")
     void deleteAllByUserOwner(@Param("userOwner") Long userOwner);
 }
