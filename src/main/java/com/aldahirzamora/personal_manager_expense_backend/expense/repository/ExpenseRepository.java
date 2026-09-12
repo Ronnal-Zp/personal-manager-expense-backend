@@ -29,6 +29,7 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
             " from Expense e\n" +
             " left join e.category c\n" +
             " where e.user_owner = :userOwner" +
+            " and e.deleted_at is null" +
             " group by c.id, c.name, c.budget_Limit"
     )
     List<TotalExpenseByCategory> getTotalByCategory(@Param("userOwner") Long userOwner);
